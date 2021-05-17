@@ -2,7 +2,7 @@
 * **first**:**123qweASD**
 * **second**:**123qweASD**
 
-## Дотупные эндпоинты:
+## Доступные эндпоинты:
 * **POST**  host:8080/api/authorization/sign-in
 * **POST**  host:8080/api/converting/convert-to-rub
 
