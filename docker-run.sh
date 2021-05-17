@@ -1,2 +1,2 @@
 #!/bin/sh
-docker run -p 8080:8080 delaweb-task
+docker run -p 8080:8080 --restart always delaweb-task
