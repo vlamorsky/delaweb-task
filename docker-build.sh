@@ -1,3 +1,3 @@
 #!/bin/sh
-mvn clean package
+./mvnw clean package
 docker build -t delaweb-task .
