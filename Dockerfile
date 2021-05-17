@@ -50,7 +50,7 @@ RUN LIBERICA_ARCH='' && LIBERICA_ARCH_TAG='' && \
 ENV JAVA_HOME=${LIBERICA_ROOT} \
 	PATH=${LIBERICA_ROOT}/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 
-COPY target/delaweb-task-1.0.0.jar .
+COPY target/delaweb-task-1.0.1.jar .
 ADD ./docker-entry.sh .
 RUN chmod +x ./docker-entry.sh
 CMD ./docker-entry.sh

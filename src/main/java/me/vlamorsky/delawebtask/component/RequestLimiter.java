@@ -42,27 +42,32 @@ public class RequestLimiter {
 
     static class Counter {
 
-        private Instant firstRequestInstant;
-        private Instant secondRequestInstant;
+        private final int LIMIT_PERIOD_IN_SECONDS = 60;
+        private final int MAX_REQUESTS_PER_PERIOD = 2;
+
+        private final Instant[] requestInstants;
 
         public Counter(Instant requestInstant) {
-            firstRequestInstant = requestInstant;
-            secondRequestInstant = requestInstant.minus(1, ChronoUnit.DAYS);
+
+            requestInstants = new Instant[MAX_REQUESTS_PER_PERIOD];
+
+            for (int i = 0; i < requestInstants.length; i++) {
+                requestInstants[i] = requestInstant.minus(1, ChronoUnit.DAYS);
+            }
+
+            requestInstants[0] = requestInstant;
         }
 
         public synchronized boolean ableToResponse(Instant currentRequestInstant) {
 
-            final Duration firstInstantDuration = Duration.between(firstRequestInstant, currentRequestInstant);
-            final Duration secondInstantDuration = Duration.between(secondRequestInstant, currentRequestInstant);
+            for (int i = 0; i < requestInstants.length; i++) {
 
-            if (!firstInstantDuration.isNegative() && firstInstantDuration.getSeconds() > 60) {
-                firstRequestInstant = currentRequestInstant;
-                return true;
-            }
+                final Duration duration = Duration.between(requestInstants[i], currentRequestInstant);
 
-            if (!secondInstantDuration.isNegative() && secondInstantDuration.getSeconds() > 60) {
-                secondRequestInstant = currentRequestInstant;
-                return true;
+                if (!duration.isNegative() && duration.getSeconds() > LIMIT_PERIOD_IN_SECONDS) {
+                    requestInstants[i] = currentRequestInstant;
+                    return true;
+                }
             }
 
             return false;
